@@ -1,4 +1,4 @@
--- ImportRAW.sql
+-- 01_Import_loan_RAW.sql
 -- Purpose: create raw landing table and ingest LendingClub CSV data into Snowflake
 -- Note: cloud credentials are intentionally omitted from the public repository.
 
