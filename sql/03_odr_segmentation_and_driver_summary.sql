@@ -1,5 +1,4 @@
 -- 03_odr_segmentation_and_driver_summary.sql
--- Step: ODR-based segmentation analysis and driver ranking
 -- Purpose:
 --   1) Create TABLE_DATA.ODR_BY_COLUMN from the curated loan table
 --   2) Create TABLE_DATA.ODR_SUMMARY with driver-level ranking metrics
