@@ -2,196 +2,85 @@
 
 This project analyses borrower risk segmentation using LendingClub loan data.
 
-Instead of focusing purely on predictive performance (e.g. AUC), the objective is to connect **probability of default (PD)** to underwriting decisions such as:
+The goal is to move beyond model accuracy and connect **probability of default (PD)** to underwriting decisions such as:
 
-- approval rate  
-- expected default rate (EDR)  
-- expected loss proxy  
-
-The project is structured as a two-phase workflow.
-
-**Phase 1 — Risk segmentation (EDA)**  
-Identify borrower attributes that meaningfully separate default risk.
-
-**Phase 2 — Policy modelling (planned)**  
-Evaluate approval strategies using predicted PD.
+- approval rate
+- expected default rate (EDR)
+- expected loss proxy
 
 This repository currently documents **Phase 1: Risk Segmentation Analysis**.
 
 ---
 
-# Dataset
+## Dataset
 
-Data source : [https://www.kaggle.com/datasets/adarshsng/lending-club-loan-data-csv](https://www.kaggle.com/datasets/adarshsng/lending-club-loan-data-csv)
+- Source: https://www.kaggle.com/datasets/adarshsng/lending-club-loan-data-csv
+- Column description: https://www.notion.so/30fdfd642ca1808e8925dfb0e506253b?v=30fdfd642ca180c58a34000cb40edb45
+- Raw table: `RAW_DATA.LOAN_DATA_RAW`
+- Clean table: `CURATED_DATA.LOAN_CLEAN`
 
-Column description : https://www.notion.so/30fdfd642ca1808e8925dfb0e506253b?v=30fdfd642ca180c58a34000cb40edb45
+Target definition:
 
-Raw data stored in Snowflake
+- `Charged Off = 1`
+- `Fully Paid = 0`
 
-`RAW_DATA.LOAN_DATA_RAW`
-
-Clean dataset used for analysis
-
-`CURATED_DATA.LOAN_CLEAN`
-
-Target definition
-
-`default = 1 → Charged Off`  
-`default = 0 → Fully Paid`
-
-Other loan statuses were excluded to avoid ambiguous outcomes.  
-The analysis therefore uses **closed loans only**.
+All other loan statuses were excluded, so the analysis uses **closed loans only**.
 
 ---
 
-# Feature Selection Framework
+## Method
 
-To ensure realistic underwriting analysis, candidate variables were selected using the following rules.
+Borrowers were segmented by feature and **Observed Default Rate (ODR)** was calculated.
 
-Each feature must satisfy:
+`ODR = defaults / closed loans`
 
-1. **Decision-time availability**  
-   Observable at the loan approval stage.
+Bucket rules:
 
-2. **Policy relevance**  
-   Contributes to underwriting decisions or risk interpretation.
+- Numeric variables → deciles using `NTILE(10)`
+- Sparse count variables → `0 / 1 / 2+`
+- Rare event variables → `0 / 1+`
 
-3. **Low leakage risk**  
-   Excludes post-loan variables related to repayment outcomes.
-
-4. **Coverage**  
-   Acceptable missingness or meaningful missing values.
-
-5. **Stability & interpretability**  
-   Clear definition and interpretable relationship with risk.
-
----
-
-# Risk Segmentation Method
-
-Borrowers were segmented across multiple variables and the **Observed Default Rate (ODR)** was calculated.
-
-`ODR = number of defaults / number of closed loans`
-
-Segmentation rules:
-
-**Numeric variables**
-
-Grouped into deciles using:
-
-`NTILE(10)`
-
-Examples:
-
-- annual_inc_decile  
-- dti_decile  
-- revol_util_decile  
-
-**Sparse count variables**
-
-Grouped into:
-
-- 0  
-- 1  
-- 2+  
-
-Examples:
-
-- delinq_2yrs  
-- mort_acc  
-- inq_last_6mths  
-
-**Rare event variables**
-
-Grouped into:
-
-- 0  
-- 1+  
-
-Examples:
-
-- num_accts_ever_120_pd  
-- num_tl_90g_dpd_24m  
-- pub_rec  
-- pub_rec_bankruptcies  
-
-Segmentation results were aggregated in the table:
+Results were aggregated in:
 
 `TABLE_DATA.ODR_BY_COLUMN`
 
-Table structure
+Variables were then ranked using summary metrics such as:
 
-| column | bucket | n_closed | n_default | odr |
-|------|------|------|------|------|
+- `odr_range`
+- `bucket_count`
+- `min_bucket_n`
+- `top_bucket_share`
+- `odr_range_filt (n_closed ≥ 200)`
 
----
-
-# Driver Ranking
-
-To identify meaningful risk drivers, each variable was summarised using several metrics:
-
-- ODR range across buckets  
-- bucket count  
-- bucket stability  
-- concentration of observations  
-
-Key metrics used:
-
-- odr_range  
-- bucket_count  
-- range_per_bucket  
-- min_bucket_n  
-- top_bucket_share  
-- odr_range_filt (n_closed ≥ 200)  
-- range_per_bucket_filt  
-
-Variables are primarily ranked by:
+Primary ranking metric:
 
 `odr_range_filt`
 
-This ranking highlights borrower attributes that produce the strongest separation in observed default risk.
+---
+
+## Results
+
+Phase 1 summary is available here:
+
+**[Phase 1 EDA Summary](docs/phase1_eda_summary.pdf)**
 
 ---
 
-# Example Result
+## Next Step
 
-*(Insert driver ranking chart here)*
+Phase 2 will build PD models and compare policy outcomes between:
 
-The ranking highlights borrower attributes that meaningfully separate default risk across borrower segments.
-
----
-
-# Next Step
-
-Phase 2 will build probability of default models and evaluate **policy outcomes**, including:
-
-- approval rate  
-- expected default rate  
-- expected loss proxy  
-
-Two modelling strategies will be compared:
-
-**Model A**  
-Full feature set
-
-**Model B**  
-Top risk drivers only
-
-The goal is to analyse how model design affects **portfolio-level risk and approval trade-offs**.
+- full feature set
+- top risk drivers only
 
 ---
 
-# Repository Structure
-credit-risk-policy
-│
+## Repository Structure
+
+```text
+CreditRisk
 ├── README.md
-│
 ├── sql
-│ ├── odr_calculation.sql
-│ ├── driver_ranking.sql
-│
 ├── docs
-│ └── phase1_eda_summary.pdf
-│
-├── tableau
-│ └── risk_segmentation_dashboard.twb
+│   └── phase1_eda_summary.pdf
+└── tableau
