@@ -81,6 +81,9 @@ Phase 2 will build PD models and compare policy outcomes between:
 CreditRisk
 ├── README.md
 ├── sql
+│   └── 01_Inport_loan_RAW.sql
+│   └── 02_create_curated_loan_clean.sql
+│   └── 03_odr_segmentation_and_summary.sql
 ├── docs
 │   └── phase1_eda_summary.pdf
 └── tableau
