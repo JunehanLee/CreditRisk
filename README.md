@@ -24,6 +24,8 @@ This repository currently documents **Phase 1: Risk Segmentation Analysis**.
 
 Data source : [https://www.kaggle.com/datasets/adarshsng/lending-club-loan-data-csv](https://www.kaggle.com/datasets/adarshsng/lending-club-loan-data-csv)
 
+Column description : https://www.notion.so/30fdfd642ca1808e8925dfb0e506253b?v=30fdfd642ca180c58a34000cb40edb45
+
 Raw data stored in Snowflake
 
 `RAW_DATA.LOAN_DATA_RAW`
