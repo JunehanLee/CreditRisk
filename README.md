@@ -63,6 +63,7 @@ Primary ranking metric:
 Phase 1 summary is available here:
 
 **[Phase 1 EDA Summary](docs/phase1_eda_summary.pdf)**
+**[Phase 1 EDA Visualization](https://public.tableau.com/app/profile/junehan.lee/viz/CREDIT_17737007005780/1_1#1)**
 
 ---
 
