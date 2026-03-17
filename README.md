@@ -62,7 +62,9 @@ Primary ranking metric:
 
 Phase 1 summary is available here:
 
-**[Phase 1 EDA Summary](docs/phase1_eda_summary.pdf)**
+**[Phase 1 EDA Summary](docs/phase1_eda_summary.pdf)**/
+<img width="1499" height="1199" alt="대시보드 1" src="https://github.com/user-attachments/assets/5d5505cf-908b-4be1-8b3d-0f12bc7a39fc" />
+
 **[Phase 1 EDA Visualization](https://public.tableau.com/app/profile/junehan.lee/viz/CREDIT_17737007005780/1_1#1)**
 
 ---
